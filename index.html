@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steam - Web Arcade & Classic Games</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2366c0f4'><path d='M12 2a10 10 0 0 0-10 9.87c0 4.7 3.32 8.62 7.76 9.68l2.67-3.87a3.49 3.49 0 0 1-1.39-2.73c0-.6.16-1.16.43-1.66L7.1 11.23a4.78 4.78 0 0 1 4.9-4.23c2.65 0 4.8 2.15 4.8 4.8 0 1.63-.82 3.07-2.07 3.93l3.69 2.55A10 10 0 0 0 12 2zm-4.7 10.65a2.53 2.53 0 0 0 2.54 2.53c.27 0 .52-.04.76-.13l-1.35-1.92a1.69 1.69 0 0 1-1.95-.48zm4.7-4.4c-1.8 0-3.26 1.46-3.26 3.26 0 .53.13 1.03.36 1.47l2.12-3.04a1.86 1.86 0 0 1 1.78-.97c1.47 0 2.66 1.19 2.66 2.66 0 .96-.51 1.8-1.28 2.27l2.87 1.98a4.02 4.02 0 0 0 1.47-3.13c0-2.23-1.8-4.04-4.04-4.04zm-1.86 6.84c.48.24 1.02.37 1.6.37a3.25 3.25 0 0 0 3.26-3.26c0-.36-.06-.7-.18-1.01l-2.78 3.9z'/></svg>">
+  <style>
+    :root {
+      --bg-dark: #10141b;
+      --bg-secondary: #171d25;
+      --bg-card: #1b2838;
+      --bg-hover: #213349;
+      --steam-blue: #66c0f4;
+      --steam-blue-dark: #1999ff;
+      --steam-accent: #2a475e;
+      --steam-light: #c7d5e0;
+      --steam-text-muted: #8f98a0;
+      --steam-green: #75b022;
+      --steam-green-hover: #8ed629;
+      --steam-btn-bg: linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%);
+      --steam-play-btn: linear-gradient(90deg, #75b022 0%, #588a1b 100%);
+      --header-bg: #171a21;
+      --nav-active: #1a9fff;
+      --modal-bg: rgba(7, 11, 16, 0.96);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(circle at 50% 0%, #1b2838 0%, #121820 400px, #0b0f14 100%);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: var(--steam-light);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Announcement Bar */
+    .announcement-bar {
+      background: #000000;
+      color: var(--steam-text-muted);
+      font-size: 11px;
+      padding: 6px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .announcement-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .announcement-inner a {
+      color: var(--steam-light);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .announcement-inner a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    /* Top Global Header */
+    .global-header {
+      background-color: var(--header-bg);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .steam-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .steam-logo {
+      width: 36px;
+      height: 36px;
+      fill: #c7d5e0;
+      transition: transform 0.25s ease, fill 0.25s ease;
+    }
+
+    .steam-brand:hover .steam-logo {
+      fill: var(--steam-blue);
+      transform: rotate(-10deg) scale(1.05);
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      color: #fff;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .brand-sub {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: var(--steam-blue);
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    .main-nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-item {
+      text-decoration: none;
+      color: #b8b6b4;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: #ffffff;
+    }
+
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -16px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--steam-blue);
+      border-radius: 2px 2px 0 0;
+    }
+
+    .header-user {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .install-steam-btn {
+      background-color: var(--steam-green);
+      color: #ffffff;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 2px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .install-steam-btn:hover {
+      background-color: var(--steam-green-hover);
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 4px 10px 4px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 3px;
+      background: linear-gradient(135deg, #1999ff, #06BFFF);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: #fff;
+      border: 2px solid #57cbde;
+    }
+
+    .user-meta {
+      display: flex;
+      flex-direction: column;
+      font-size: 12px;
+    }
+
+    .user-name {
+      color: #ffffff;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .user-wallet {
+      color: var(--steam-blue);
+      font-size: 11px;
+    }
+
+    /* Sub Navigation Bar (Steam Store Menu) */
+    .store-subnav {
+      background-color: #316282; /* Fallback */
+      background-image: linear-gradient(90deg, rgba(31, 102, 151, 1) 0%, rgba(13, 27, 36, 1) 100%);
+      box-shadow: 0 0 3px rgba(0,0,0,0.4);
+      margin-top: 10px;
+    }
+
+    .subnav-inner {
+      max-width: 940px; /* Steam's classic width */
+      margin: 0 auto;
+      padding: 0;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .subnav-links {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    .subnav-btn {
+      background: transparent;
+      border: none;
+      color: #E5E5E5;
+      padding: 0 15px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      text-shadow: 0px 2px 3px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+      text-transform: none; /* Steam uses title case here */
+    }
+
+    .subnav-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .subnav-btn.active {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      box-shadow: none;
+    }
+
+    .search-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-right: 4px;
+    }
+
+    .search-input {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      border-radius: 3px;
+      color: #fff;
+      padding: 4px 28px 4px 8px;
+      font-size: 13px;
+      width: 210px;
+      height: 26px;
+      outline: none;
+      transition: background 0.2s ease;
+      text-shadow: 0px 1px 1px rgba(0,0,0,0.3);
+      font-family: inherit;
+    }
+
+    .search-input::placeholder {
+      color: #0e1c25;
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.1);
+      font-style: italic;
+    }
+
+    .search-input:focus {
+      background: rgba(255, 255, 255, 0.9);
+      color: #111;
+      text-shadow: none;
+      border-color: #66c0f4;
+    }
+
+    .search-input:focus::placeholder {
+      color: #666;
+      text-shadow: none;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 2px;
+      width: 22px;
+      height: 22px;
+      background: #66c0f4;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      fill: #111;
+      padding: 4px;
+    }
+    
+    .search-icon:hover {
+      background: #89cff0;
+    }
+
+    /* Main Container */
+    .main-content {
+      max-width: 1200px;
+      margin: 28px auto 60px;
+      padding: 0 20px;
+    }
+
+    /* Featured Spotlight Banner */
+    .spotlight-section {
+      margin-bottom: 40px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: var(--steam-blue);
+      border-radius: 2px;
+    }
+
+    .game-count-badge {
+      font-size: 12px;
+      color: var(--steam-blue);
+      background: rgba(102, 192, 244, 0.1);
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(102, 192, 244, 0.2);
+    }
+
+    .spotlight-card {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      background: linear-gradient(135deg, #1b2838 0%, #15202e 100%);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 380px;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+
+    .spotlight-card:hover {
+      border-color: rgba(102, 192, 244, 0.4);
+    }
+
+    .spotlight-hero {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      background-color: #0b1016;
+    }
+
+    .spotlight-hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .spotlight-hero:hover .spotlight-hero-img {
+      transform: scale(1.03);
+    }
+
+    .spotlight-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(16, 20, 27, 0.85) 100%);
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+    }
+
+    .hero-play-prompt {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(102, 192, 244, 0.4);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .spotlight-hero:hover .hero-play-prompt {
+      background: var(--steam-blue-dark);
+      border-color: #fff;
+    }
+
+    .spotlight-details {
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: rgba(10, 15, 22, 0.5);
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .spotlight-header h2 {
+      color: #fff;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .spotlight-desc {
+      color: var(--steam-light);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      opacity: 0.85;
+    }
+
+    .spotlight-thumbs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .spotlight-thumb-btn {
+      border: 2px solid transparent;
+      border-radius: 3px;
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 16/9;
+      background: #111;
+      padding: 0;
+      transition: all 0.2s ease;
+      opacity: 0.6;
+    }
+
+    .spotlight-thumb-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .spotlight-thumb-btn.active {
+      opacity: 1;
+      border-color: var(--steam-blue);
+      box-shadow: 0 0 10px rgba(102, 192, 244, 0.5);
+    }
+
+    .spotlight-thumb-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .game-tag {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--steam-blue);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+
+    .spotlight-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 16px;
+    }
+
+    .price-free {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #8ed629;
+      border-radius: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-launch {
+      background: var(--steam-play-btn);
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 3px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(117, 176, 34, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-launch:hover {
+      background: linear-gradient(90deg, #8ed629 0%, #68a41f 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(142, 214, 41, 0.5);
+    }
+
+    /* Filters & Controls Bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding: 12px 18px;
+      background: rgba(20, 27, 36, 0.7);
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--steam-light);
+      padding: 6px 12px;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-chip:hover {
+      background: rgba(102, 192, 244, 0.15);
+      color: #fff;
+      border-color: var(--steam-blue);
+    }
+
+    .filter-chip.active {
+      background: var(--steam-blue);
+      color: #0b1016;
+      font-weight: 700;
+      border-color: var(--steam-blue);
+    }
+
+    .sort-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--steam-text-muted);
+    }
+
+    .sort-select {
+      background: #171d25;
+      color: var(--steam-light);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Games Grid */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .game-card {
+      background: linear-gradient(180deg, #1b2838 0%, #151e2a 100%);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s cubic-bezier(0.2, 0, 0.1, 1);
+      position: relative;
+    }
+
+    .game-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.7);
+      border-color: var(--steam-blue);
+    }
+
+    .card-img-wrap {
+      position: relative;
+      aspect-ratio: 460 / 215;
+      background: #0d1218;
+      overflow: hidden;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    .game-card:hover .card-img {
+      transform: scale(1.06);
+    }
+
+    .card-play-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(14, 22, 33, 0.65);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .game-card:hover .card-play-overlay {
+      opacity: 1;
+    }
+
+    .card-play-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--steam-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      transform: scale(0.8);
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .game-card:hover .card-play-icon {
+      transform: scale(1);
+    }
+
+    .card-content {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: var(--steam-text-muted);
+    }
+
+    .card-platforms {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .platform-icon {
+      width: 13px;
+      height: 13px;
+      fill: var(--steam-text-muted);
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .card-tag {
+      font-size: 10px;
+      color: #8da4be;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2px 6px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .card-free-tag {
+      background: #4c6b22;
+      color: #a4d007;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .card-action-text {
+      font-size: 11px;
+      color: var(--steam-blue);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Empty Search State */
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: rgba(23, 29, 37, 0.4);
+      border-radius: 6px;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    .no-results h3 {
+      font-size: 18px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .no-results p {
+      color: var(--steam-text-muted);
+      font-size: 14px;
+    }
+
+    /* Embedded Game Player Modal (Steam Theater) */
+    .player-modal {
+      position: fixed;
+      inset: 0;
+      background: var(--modal-bg);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .player-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-header {
+      background: #171d25;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-game-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .modal-game-thumb {
+      width: 44px;
+      height: 28px;
+      border-radius: 3px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-game-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-game-badge {
+      font-size: 10px;
+      font-weight: 600;
+      background: rgba(102, 192, 244, 0.15);
+      color: var(--steam-blue);
+      border: 1px solid rgba(102, 192, 244, 0.3);
+      padding: 2px 6px;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+    }
+
+    .modal-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .control-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--steam-light);
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .control-btn:hover {
+      background: rgba(102, 192, 244, 0.2);
+      color: #ffffff;
+      border-color: var(--steam-blue);
+    }
+
+    .control-btn.btn-fullscreen {
+      background: linear-gradient(90deg, #1999ff 0%, #06BFFF 100%);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 2px 8px rgba(25, 153, 255, 0.3);
+    }
+
+    .control-btn.btn-fullscreen:hover {
+      background: linear-gradient(90deg, #2ea3ff 0%, #1ab5ff 100%);
+      transform: translateY(-1px);
+    }
+
+    .control-btn.btn-close {
+      background: rgba(255, 50, 50, 0.15);
+      border-color: rgba(255, 50, 50, 0.3);
+      color: #ff8585;
+    }
+
+    .control-btn.btn-close:hover {
+      background: rgba(255, 50, 50, 0.3);
+      color: #ffffff;
+      border-color: #ff5555;
+    }
+
+    /* Modal Player Body */
+    .modal-player-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .game-iframe-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .game-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #000;
+    }
+
+    /* Loading overlay */
+    .player-loader {
+      position: absolute;
+      inset: 0;
+      background: #0a0e14;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .player-loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(102, 192, 244, 0.2);
+      border-top-color: var(--steam-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      font-size: 14px;
+      color: var(--steam-blue);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .modal-footer {
+      background: #121820;
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 12px;
+      color: var(--steam-text-muted);
+    }
+
+    .footer-hints {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .hint-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hint-key {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #fff;
+    }
+
+    .external-link {
+      color: var(--steam-blue);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .external-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #0d1218;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 40px 20px 30px;
+      color: var(--steam-text-muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--steam-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--steam-blue);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .spotlight-card {
+        grid-template-columns: 1fr;
+      }
+      .spotlight-hero {
+        min-height: 240px;
+      }
+      .main-nav {
+        display: none;
+      }
+      .search-input {
+        width: 180px;
+      }
+      .search-input:focus {
+        width: 200px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header-inner {
+        padding: 0 12px;
+      }
+      .user-wallet, .user-name {
+        display: none;
+      }
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .footer-hints {
+        display: none;
+      }
+      .modal-game-info span.modal-game-badge {
+        display: none;
+      }
+    }
+    .modal-input {
+      width: 100%;
+      box-sizing: border-box;
+      background: #212d3d;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      border-radius: 3px;
+      color: #fff;
+      padding: 10px;
+      height: 38px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .modal-input:focus {
+      border-color: #66c0f4;
+    }
+    .modal-input::placeholder {
+      color: #536f86;
+      font-style: italic;
+    }
+    /* Adblock Prompt Modal */
+    .center-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .center-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .center-modal-box {
+      background: #171d25;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      border-radius: 4px;
+      max-width: 500px;
+      width: 90%;
+      padding: 30px;
+      text-align: center;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    .center-modal-overlay.active .center-modal-box {
+      transform: translateY(0);
+    }
+    .adblock-icon {
+      fill: #ff5555;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="announcement-inner" style="display: flex; align-items: center; justify-content: flex-start; gap: 20px;">
+      <div class="site-credits">
+        <a href="#" onclick="event.preventDefault(); document.getElementById('creditsModal').classList.add('active');" style="color: #66c0f4; font-weight: 600;">Site Credits</a>
+      </div>
+      <div class="disclaimer" style="color: var(--steam-text-muted);">⚠️ Disclaimer: Games are hosted externally and we do not own these titles. This site has no affiliation with Steam.</div>
+      <div class="update-log" style="margin-left: auto;">
+        <a href="#" onclick="event.preventDefault(); document.getElementById('updateModal').classList.add('active');">View Update Log</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Steam Top Header -->
+  <header class="global-header">
+    <div class="header-inner">
+      <div class="brand-section">
+        <a href="#" class="steam-brand" id="brandHomeBtn">
+          <svg class="steam-logo" viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 0 0-10 9.87c0 4.7 3.32 8.62 7.76 9.68l2.67-3.87a3.49 3.49 0 0 1-1.39-2.73c0-.6.16-1.16.43-1.66L7.1 11.23a4.78 4.78 0 0 1 4.9-4.23c2.65 0 4.8 2.15 4.8 4.8 0 1.63-.82 3.07-2.07 3.93l3.69 2.55A10 10 0 0 0 12 2zm-4.7 10.65a2.53 2.53 0 0 0 2.54 2.53c.27 0 .52-.04.76-.13l-1.35-1.92a1.69 1.69 0 0 1-1.95-.48zm4.7-4.4c-1.8 0-3.26 1.46-3.26 3.26 0 .53.13 1.03.36 1.47l2.12-3.04a1.86 1.86 0 0 1 1.78-.97c1.47 0 2.66 1.19 2.66 2.66 0 .96-.51 1.8-1.28 2.27l2.87 1.98a4.02 4.02 0 0 0 1.47-3.13c0-2.23-1.8-4.04-4.04-4.04zm-1.86 6.84c.48.24 1.02.37 1.6.37a3.25 3.25 0 0 0 3.26-3.26c0-.36-.06-.7-.18-1.01l-2.78 3.9z"/>
+          </svg>
+          <div class="brand-title">
+            STEAM
+            <span class="brand-sub">WEB ARCADE</span>
+          </div>
+        </a>
+
+        <nav class="main-nav">
+          <a class="nav-item active" href="#games">GAMES</a>
+          <a class="nav-item" href="disclaimer.html">DISCLAIMER</a>
+          <a class="nav-item" href="about.html">ABOUT</a>
+          <a class="nav-item" href="support.html">SUPPORT</a>
+        </nav>
+      </div>
+
+      <div class="header-user">
+        <a href="#" onclick="event.preventDefault(); quickPlayRandomGame();" class="install-steam-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+          </svg>
+          Quick Play
+        </a>
+        <div class="user-profile-badge" onclick="editProfile()" style="cursor: pointer;" title="Edit Profile">
+          <div class="user-avatar" id="userAvatarElem">P</div>
+          <div class="user-meta">
+            <span class="user-name" id="userNameElem">Player1</span>
+            <span class="user-wallet">Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Store Sub Navigation -->
+  <div class="store-subnav">
+    <div class="subnav-inner">
+      <div class="subnav-links">
+        <button class="subnav-btn active" data-category="all" onclick="filterCategory('all', this)">
+          All Games (<span id="totalCountDisplay">21</span>)
+        </button>
+        <button class="subnav-btn" data-category="CoD & Zombies" onclick="filterCategory('CoD & Zombies', this)">
+          CoD & Zombies
+        </button>
+        <button class="subnav-btn" data-category="Shooter" onclick="filterCategory('Shooter', this)">
+          Classic Shooters
+        </button>
+        <button class="subnav-btn" data-category="Open World" onclick="filterCategory('Open World', this)">
+          Open World & Action
+        </button>
+        <button class="subnav-btn" data-category="Sports & Arcade" onclick="filterCategory('Sports & Arcade', this)">
+          Sports & Arcade
+        </button>
+      </div>
+
+      <div class="search-container">
+        <input 
+          type="text" 
+          id="searchInput" 
+          class="search-input" 
+          placeholder="search the store..."
+          autocomplete="off"
+        >
+        <svg class="search-icon" viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <!-- Featured Carousel / Spotlight Section -->
+    <section class="spotlight-section">
+      <div class="section-title-wrap">
+        <h2 class="section-title">FEATURED & RECOMMENDED</h2>
+        <span class="game-count-badge">SPOTLIGHT</span>
+      </div>
+
+      <div class="spotlight-card" id="spotlightCard">
+        <div class="spotlight-hero" id="spotlightHero" onclick="launchSpotlightGame()">
+          <img id="spotlightHeroImg" class="spotlight-hero-img" src="" alt="Featured Game">
+          <div class="spotlight-hero-overlay">
+            <div class="hero-play-prompt">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <span>Click to Play Instantly</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="spotlight-details">
+          <div class="spotlight-header">
+            <h2 id="spotlightTitle">Loading Featured...</h2>
+            <p id="spotlightDesc" class="spotlight-desc">Detailed game info</p>
+            <div id="spotlightTags" class="tags-list"></div>
+          </div>
+
+          <div class="spotlight-thumbs" id="spotlightThumbs"></div>
+
+          <div class="spotlight-action-bar">
+            <span class="price-free">FREE TO PLAY</span>
+            <button class="btn-launch" onclick="launchSpotlightGame()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              Play Game
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter & Sort Bar -->
+    <section id="games-section">
+      <div class="filter-bar">
+        <div class="filter-chips">
+          <button class="filter-chip active" data-tag="all" onclick="filterByTag('all', this)">All</button>
+          <button class="filter-chip" data-tag="Zombies" onclick="filterByTag('Zombies', this)">Zombies</button>
+          <button class="filter-chip" data-tag="FPS" onclick="filterByTag('FPS', this)">FPS</button>
+          <button class="filter-chip" data-tag="Call of Duty" onclick="filterByTag('Call of Duty', this)">Call of Duty</button>
+          <button class="filter-chip" data-tag="GTA" onclick="filterByTag('GTA', this)">GTA</button>
+          <button class="filter-chip" data-tag="Multiplayer" onclick="filterByTag('Multiplayer', this)">Multiplayer</button>
+          <button class="filter-chip" data-tag="Retro" onclick="filterByTag('Retro', this)">Retro Classics</button>
+        </div>
+
+        <div class="sort-container">
+          <label for="sortSelect">Sort by:</label>
+          <select id="sortSelect" class="sort-select" onchange="handleSortChange(this.value)">
+            <option value="default">Featured (Curated)</option>
+            <option value="az">Name (A-Z)</option>
+            <option value="za">Name (Z-A)</option>
+            <option value="year">Release Year (Newest)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Games Grid -->
+      <div class="games-grid" id="gamesGrid">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </section>
+  </main>
+
+
+  <!-- Embedded Steam Game Theater Modal -->
+  <div class="player-modal" id="playerModal">
+    <div class="modal-header">
+      <div class="modal-game-info">
+        <img id="modalGameThumb" class="modal-game-thumb" src="" alt="Thumbnail">
+        <div>
+          <div class="modal-game-title">
+            <span id="modalGameTitle">Game Name</span>
+            <span class="modal-game-badge">ONLINE EMBED</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-controls">
+        <button class="control-btn btn-fullscreen" id="fullscreenBtn" title="Toggle Fullscreen">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+          </svg>
+          Fullscreen
+        </button>
+        <button class="control-btn" id="reloadGameBtn" title="Restart Game Session">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+          Restart
+        </button>
+        <a class="control-btn" id="popoutGameBtn" href="#" target="_blank" rel="noopener noreferrer" title="Open in new window">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+          </svg>
+          Pop-out
+        </a>
+        <button class="control-btn btn-close" id="closeModalBtn" title="Close (Esc)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+          Exit
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-player-body" id="playerContainer">
+      
+      <div id="gameWarningBanner" style="display: none; background: rgba(255, 50, 50, 0.15); border-bottom: 1px solid rgba(255, 50, 50, 0.3); color: #fff; padding: 12px 20px; font-size: 14px; text-align: center; flex-shrink: 0;">
+        <strong style="color: #ff5555;">⚠️ Important Note for GTA Vice City:</strong> The download server has a bug. When you download the game archive (Step 1), it saves a file simply named <code>download</code> without an extension. <strong>You MUST manually rename it to exactly <code>game.tar.gz</code></strong> in your Downloads folder before selecting it in Step 2!
+      </div>
+
+      <div class="player-loader" id="playerLoader">
+        <div class="spinner"></div>
+        <div class="loader-text">CONNECTING TO GAME SERVER...</div>
+      </div>
+      <div class="game-iframe-wrapper">
+        <iframe 
+          id="gameIframe" 
+          class="game-iframe" 
+          src="about:blank"
+          referrerpolicy="no-referrer"
+
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen; pointer-lock; gamepad"
+          allowfullscreen="true"
+          webkitallowfullscreen="true"
+          mozallowfullscreen="true"
+          loading="eager"
+        ></iframe>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="footer-hints">
+        <div class="hint-item">
+          <span class="hint-key">Esc</span> Exit Theater
+        </div>
+        <div class="hint-item">
+          <span class="hint-key">F</span> Fullscreen
+        </div>
+        <div class="hint-item">
+          <span class="hint-key">Click inside</span> Enable Mouse Pointer Lock
+        </div>
+      </div>
+      <div>
+        Direct Link: <a id="modalExternalUrl" class="external-link" href="#" target="_blank" rel="noopener noreferrer"></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#66c0f4">
+            <path d="M12 2a10 10 0 0 0-10 9.87c0 4.7 3.32 8.62 7.76 9.68l2.67-3.87a3.49 3.49 0 0 1-1.39-2.73c0-.6.16-1.16.43-1.66L7.1 11.23a4.78 4.78 0 0 1 4.9-4.23c2.65 0 4.8 2.15 4.8 4.8 0 1.63-.82 3.07-2.07 3.93l3.69 2.55A10 10 0 0 0 12 2z"/>
+          </svg>
+          STEAM WEB ARCADE
+        </div>
+        <ul class="footer-links">
+          <li><a href="#store">Store Home</a></li>
+          <li><a href="#featured">Featured Titles</a></li>
+          <li><a href="https://store.steampowered.com" target="_blank" rel="noopener">Official Steam</a></li>
+          <li><a href="#support">Web Port Credits</a></li>
+        </ul>
+      </div>
+      <p>© 2026 Steam Web Arcade. Built for web gaming enthusiasts. All game trademarks, copyrights, and assets belong to their respective creators and publishers (Valve, Activision, EA, Bungie, id Software, Rockstar Games, Blizzard, Konami).</p>
+    </div>
+  </footer>
+
+  <!-- Update Log Modal -->
+  <div class="center-modal-overlay" id="updateModal">
+    <div class="center-modal-box" style="text-align: left; max-width: 550px; padding: 24px;">
+      <h2 style="color: #fff; margin-bottom: 20px; font-size: 22px; font-weight: 400; letter-spacing: 1px; display: flex; align-items: center; gap: 10px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#66c0f4">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+        </svg>
+        Steam Web Arcade Updates
+      </h2>
+      
+      <div style="max-height: 400px; overflow-y: auto; padding-right: 10px; margin-bottom: 24px; color: #c7d5e0; font-size: 14px; line-height: 1.6;">
+        
+        <div style="background: rgba(102, 192, 244, 0.1); border-left: 3px solid #66c0f4; padding: 10px 14px; margin-bottom: 20px; color: #fff;">
+          <strong>Domain Update:</strong> As of October 10th, the site has moved to its own domain at <a href="https://steamwebarcade.site" style="color: #66c0f4; text-decoration: underline;">steamwebarcade.site</a>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <h3 style="color: #66c0f4; font-size: 16px; margin-bottom: 8px;">[v1.2] Latest Updates (Oct 10, 2026)</h3>
+          <ul style="padding-left: 20px; margin-bottom: 10px;">
+            <li style="margin-bottom: 6px;"><strong>Complete UI Overhaul:</strong> Redesigned navigation and menus to perfectly match the classic Steam layout.</li>
+            <li style="margin-bottom: 6px;"><strong>Custom Profile System:</strong> You can now click your profile top-right to set a custom username and locally upload your own avatar picture.</li>
+            <li style="margin-bottom: 6px;"><strong>Better Game Support:</strong> Removed iframe restrictions so complex games like GTA Vice City (WASM) can successfully upload and save `.tar.gz` data files locally via OPFS.</li>
+            <li style="margin-bottom: 6px;"><strong>New Pages:</strong> Added dedicated, fully-styled pages for Disclaimer, About, and Support (troubleshooting).</li>
+            <li style="margin-bottom: 6px;"><strong>Featured & Quick Play:</strong> The top carousel now features clean horizontal game banners, and a new "Quick Play" button instantly boots a random title.</li>
+            <li style="margin-bottom: 6px;"><strong>Smart Adblock Detection:</strong> Added a prompt that detects if an extension is breaking the games by getting them stuck on "Loading...".</li>
+            <li style="margin-bottom: 6px;"><strong>Dynamic Warnings:</strong> Built a custom warning banner into the player that dynamically displays exactly how to fix external bugs (like the GTA Vice City download bug).</li>
+          </ul>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <h3 style="color: #8f98a0; font-size: 15px; margin-bottom: 8px;">[v1.1] URL & Frame Updates (Oct 9, 2026)</h3>
+          <ul style="padding-left: 20px; margin-bottom: 10px;">
+            <li>Added dynamic URL routing so you can refresh or link directly to a specific game.</li>
+            <li>Removed strict iframe overlay restrictions to boost compatibility across external sites.</li>
+            <li>Cleaned up 4 dead/broken links from the database.</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 style="color: #8f98a0; font-size: 15px; margin-bottom: 8px;">[v1.0] Official Release (Oct 9, 2026)</h3>
+          <ul style="padding-left: 20px; margin-bottom: 0;">
+            <li>Launched the Arcade with 21 working retro titles, featuring a custom full-screen HTML5 theater player.</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end;">
+        <button onclick="document.getElementById('updateModal').classList.remove('active')" style="background: linear-gradient(90deg, #1999ff 0%, #06BFFF 100%); color: #fff; border: none; padding: 8px 24px; border-radius: 3px; cursor: pointer; font-weight: 600; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='none'">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Credits Modal -->
+  <div class="center-modal-overlay" id="creditsModal">
+    <div class="center-modal-box" style="text-align: left; max-width: 400px; padding: 24px;">
+      <h2 style="color: #fff; margin-bottom: 16px; font-size: 20px; font-weight: 400;">Site Credits</h2>
+      <p style="color: #c7d5e0; font-size: 15px; line-height: 1.6; margin-bottom: 24px;">
+        <a href="https://yzcat.xyz" target="_blank" style="color: #66c0f4; text-decoration: none; font-weight: 600;">yzcat</a> vibecoded tis enjoy
+      </p>
+      <div style="display: flex; justify-content: flex-end;">
+        <button onclick="document.getElementById('creditsModal').classList.remove('active')" style="background: linear-gradient(90deg, #1999ff 0%, #06BFFF 100%); color: #fff; border: none; padding: 8px 16px; border-radius: 3px; cursor: pointer; font-weight: 600; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='none'">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Edit Modal -->
+  <div class="center-modal-overlay" id="profileModal">
+    <div class="center-modal-box" style="text-align: left; max-width: 400px; padding: 24px;">
+      <h2 style="color: #fff; margin-bottom: 20px; font-size: 20px; font-weight: 400; letter-spacing: 1px;">Edit Profile</h2>
+      
+      <div style="margin-bottom: 16px;">
+        <label for="profileNameInput" style="display: block; color: var(--steam-text-muted); font-size: 13px; margin-bottom: 6px;">Profile Name</label>
+        <input type="text" id="profileNameInput" class="modal-input">
+      </div>
+      
+      <div style="margin-bottom: 24px;">
+        <label for="profileAvatarInput" style="display: block; color: var(--steam-text-muted); font-size: 13px; margin-bottom: 6px;">Avatar (Letter, Image URL, or Upload)</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="profileAvatarInput" class="modal-input" style="flex: 1; min-width: 0;" placeholder="e.g. https://example.com/icon.png">
+          
+          <button onclick="document.getElementById('profileAvatarUpload').click()" style="background: #2a475e; color: #66c0f4; border: 1px solid #66c0f4; padding: 0 16px; border-radius: 3px; cursor: pointer; height: 38px; transition: all 0.2s;" onmouseover="this.style.background='#66c0f4'; this.style.color='#171d25';" onmouseout="this.style.background='#2a475e'; this.style.color='#66c0f4';" title="Upload Local Image">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
+              <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/>
+            </svg>
+          </button>
+          <input type="file" id="profileAvatarUpload" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button onclick="closeProfileModal()" style="background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 8px 16px; border-radius: 3px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">Cancel</button>
+        <button onclick="saveProfileModal()" style="background: linear-gradient(90deg, #1999ff 0%, #06BFFF 100%); color: #fff; border: none; padding: 8px 16px; border-radius: 3px; cursor: pointer; font-weight: 600; transition: filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='none'">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Adblock Prompt -->
+  <div class="center-modal-overlay" id="adblockPrompt">
+    <div class="center-modal-box" style="border-color: rgba(255, 50, 50, 0.3);">
+      <svg class="adblock-icon" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+      </svg>
+      <h2 style="color: #fff; margin-bottom: 16px; font-size: 22px;">Adblocker Detected</h2>
+      <p style="color: #c7d5e0; font-size: 15px; line-height: 1.6; margin-bottom: 24px;">
+        We noticed you are using an adblocker. Because these games rely on external CDNs and servers, <strong>strict adblockers will mistakenly block essential game files</strong>. 
+        <br><br>
+        If a game gets stuck on "Loading..." or a black screen, please turn off your adblocker for this site and refresh the page.
+      </p>
+      <button onclick="document.getElementById('adblockPrompt').classList.remove('active')" style="background: linear-gradient(90deg, #1999ff 0%, #06BFFF 100%); color: #fff; border: none; padding: 10px 24px; border-radius: 3px; font-weight: 600; cursor: pointer; font-size: 14px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='none'">Got it</button>
+    </div>
+  </div>
+
+  <!-- Application Script -->
+  <script>
+    // Complete 21 Games Database
+    const GAMES = [
+      {
+        id: "bo1-zombies",
+        title: "Call of Duty: BO1 Zombies",
+        url: "https://vel.gg/bo1z",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/42700/capsule_616x353.jpg",
+        category: "CoD & Zombies",
+        tags: ["Zombies", "Call of Duty", "FPS", "Survival"],
+        year: 2010,
+        developer: "Treyarch / Web Port",
+        description: "The legendary Call of Duty: Black Ops 1 Zombies experience ported to the web. Fight hordes of undead with classic round-based survival gameplay."
+      },
+      {
+        id: "moon-zombies",
+        title: "Call of Duty: Moon Zombies",
+        url: "https://moon-zombies.pages.dev/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/42700/header.jpg",
+        category: "CoD & Zombies",
+        tags: ["Zombies", "Call of Duty", "FPS", "Low Gravity"],
+        year: 2011,
+        developer: "Treyarch / WebGL Port",
+        description: "Experience the iconic Moon Zombies map with low gravity, PES suits, the Hacker device, and Area 51 No Man's Land."
+      },
+      {
+        id: "kino-der-toten",
+        title: "CoD: Kino der Toten",
+        url: "https://kino-der-toten.pages.dev/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/42700/header.jpg",
+        category: "CoD & Zombies",
+        tags: ["Zombies", "Call of Duty", "FPS", "Classic"],
+        year: 2010,
+        developer: "Treyarch / WebGL",
+        description: "Theater of the Damned! The most beloved Call of Duty zombies map of all time, featuring the Thundergun, mystery box, and teleporter to Pack-a-Punch."
+      },
+      {
+        id: "bo3-cheese-cube",
+        title: "BO3 Cheese Cube Unlimited",
+        url: "https://cheese-cube.pages.dev/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/311210/capsule_616x353.jpg",
+        category: "CoD & Zombies",
+        tags: ["Zombies", "Call of Duty", "Custom Map", "Parkour"],
+        year: 2015,
+        developer: "Custom Zombies Team",
+        description: "The fan-favorite custom zombies challenge map! Climb through tiered cheese levels solving puzzles and battling escalating waves of zombies."
+      },
+
+      {
+        id: "mw2",
+        title: "Call of Duty: Modern Warfare 2",
+        url: "https://ovz-game-production.up.railway.app/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/10180/capsule_616x353.jpg",
+        category: "CoD & Zombies",
+        tags: ["Call of Duty", "FPS", "Multiplayer", "Action"],
+        year: 2009,
+        developer: "Infinity Ward / OVZ",
+        description: "The pinnacle of arcade FPS warfare. Relive the iconic maps, weapons, and adrenaline of 2009 Modern Warfare 2 online."
+      },
+      {
+        id: "skate3",
+        title: "Skate 3",
+        url: "https://skate.aaddpp.lol/",
+        image: "https://images.igdb.com/igdb/image/upload/t_720p/co1r7f.jpg",
+        category: "Sports & Arcade",
+        tags: ["Sports & Arcade", "Skating", "Physics", "Open World"],
+        year: 2010,
+        developer: "EA Black Box / Emulator Port",
+        description: "Flickit controls, Port Carverton skateparks, hall of meat physics, and freeform skateboarding tricks."
+      },
+
+      {
+        id: "cs-surf",
+        title: "Counter-Strike Surf",
+        url: "https://surfd.net/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg",
+        category: "Shooter",
+        tags: ["FPS", "Movement", "Multiplayer", "Classic"],
+        year: 2012,
+        developer: "Source Surf Community",
+        description: "Master the hypnotic art of air-strafing and surfing along steep triangular ramps at blistering speeds."
+      },
+      {
+        id: "halo-ce",
+        title: "Halo: Combat Evolved",
+        url: "https://mitchellhynes.com/halo",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/976730/capsule_616x353.jpg",
+        category: "Shooter",
+        tags: ["FPS", "Sci-Fi", "Shooter", "Retro"],
+        year: 2001,
+        developer: "Bungie / Mitchell Hynes",
+        description: "Step into Master Chief's armor on the mysterious ringworld Halo. Featuring the legendary Magnum, assault rifle, and plasma weapons."
+      },
+      {
+        id: "halo-ce-mobile",
+        title: "Halo CE (Web / Mobile)",
+        url: "https://hcemobile.com/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/976730/header.jpg",
+        category: "Shooter",
+        tags: ["FPS", "Mobile Ready", "Sci-Fi", "Multiplayer"],
+        year: 2003,
+        developer: "Bungie / HCE Mobile",
+        description: "Touch-optimized and responsive browser port of Halo Combat Evolved designed for all screen types."
+      },
+      {
+        id: "pes6",
+        title: "Pro Evolution Soccer 6",
+        url: "https://pes6.optijuegos.net/",
+        image: "https://images.igdb.com/igdb/image/upload/t_720p/co249x.jpg",
+        category: "Sports & Arcade",
+        tags: ["Sports & Arcade", "Football", "Classic", "Retro"],
+        year: 2006,
+        developer: "Konami",
+        description: "Widely heralded as one of the greatest football simulation games ever made. Adriano's legendary 99 shot power in your browser!"
+      },
+      {
+        id: "gta5",
+        title: "Grand Theft Auto V",
+        url: "https://web.archive.org/web/20261006055917/https://playgta5.com/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/271590/capsule_616x353.jpg",
+        category: "Open World",
+        tags: ["GTA", "Open World", "Action", "Crime"],
+        year: 2013,
+        developer: "Rockstar Games / Archive",
+        description: "Explore sunny Los Santos in this web emulation project featuring driving, open sandbox gameplay, and missions."
+      },
+      {
+        id: "gta-vc",
+        title: "GTA: Vice City (WASM)",
+        url: "https://joncodeofficial.github.io/gta-vice-city-wasm",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/12110/header.jpg",
+        category: "Open World",
+        tags: ["GTA", "Open World", "Retro", "Action"],
+        year: 2002,
+        developer: "Rockstar Games / re3 WASM",
+        description: "Tommy Vercetti's 1980s neon synthwave criminal empire running natively in WebAssembly in your browser."
+      },
+      {
+        id: "simpsons",
+        title: "The Simpsons: Hit & Run",
+        url: "https://shar-wasm.cjoseph.workers.dev/?skipmovie",
+        image: "https://images.igdb.com/igdb/image/upload/t_720p/co1r8c.jpg",
+        category: "Open World",
+        tags: ["Open World", "Retro", "Comedy", "Racing"],
+        year: 2003,
+        developer: "Radical Entertainment / WASM",
+        description: "The quintessential comedy open world game! Drive around Springfield as Homer, Bart, Lisa, and Marge smashing wasps and completing missions."
+      },
+      {
+        id: "quake1",
+        title: "Quake I",
+        url: "https://q1.pieter.com/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2310/capsule_616x353.jpg",
+        category: "Shooter",
+        tags: ["FPS", "Retro", "id Software", "Speedrun"],
+        year: 1996,
+        developer: "id Software / Pieter",
+        description: "The groundbreaking dark gothic FPS that pioneered true 3D graphics and lightning fast rocket-jumping movement."
+      },
+      {
+        id: "quake2",
+        title: "Quake II",
+        url: "https://q2.pieter.com/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2820/capsule_616x353.jpg",
+        category: "Shooter",
+        tags: ["FPS", "Retro", "Sci-Fi", "id Software"],
+        year: 1997,
+        developer: "id Software / Pieter",
+        description: "Battle the biomechanical Strogg alien empire on their home world with the railgun, super shotgun, and pulse laser."
+      },
+      {
+        id: "quake3",
+        title: "Quake III Arena",
+        url: "https://q3.pieter.com/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2200/capsule_616x353.jpg",
+        category: "Shooter",
+        tags: ["FPS", "Multiplayer", "Arena Shooter", "Retro"],
+        year: 1999,
+        developer: "id Software / Pieter",
+        description: "The ultimate competitive arena shooter. Strafe-jump across jump pads, grab quad damage, and frag bots in cyberspace."
+      },
+      {
+        id: "rtcw",
+        title: "Return to Castle Wolfenstein",
+        url: "https://rtcw.pieter.com/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/9010/header.jpg",
+        category: "Shooter",
+        tags: ["FPS", "Retro", "WW2", "Supernatural"],
+        year: 2001,
+        developer: "Gray Matter / id Software / Pieter",
+        description: "B.J. Blazkowicz battles through occult Nazi catacombs and genetic horrors in this seminal id Tech 3 masterpiece."
+      },
+      {
+        id: "ut99",
+        title: "Unreal Tournament (1999)",
+        url: "https://ut.pieter.com/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/13240/header.jpg",
+        category: "Shooter",
+        tags: ["FPS", "Arena Shooter", "Multiplayer", "Retro"],
+        year: 1999,
+        developer: "Epic Games / Pieter",
+        description: "Facing Worlds! Monster Kill! Relive the peak of gladiatorial sci-fi arena combat with the Flak Cannon and Redeemer."
+      },
+      {
+        id: "half-life",
+        title: "Half-Life",
+        url: "https://pixelsuft.github.io/hl/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/70/capsule_616x353.jpg",
+        category: "Shooter",
+        tags: ["FPS", "Valve", "Sci-Fi", "Classic"],
+        year: 1998,
+        developer: "Valve / WebAssembly",
+        description: "Gordon Freeman's harrowing journey through the Black Mesa Research Facility. The revolutionary story-driven FPS that defined PC gaming."
+      },
+      {
+        id: "cs16",
+        title: "Half-Life / CS 1.6 (WebXash)",
+        url: "https://x8bitrain.github.io/webXash/",
+        image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/10/capsule_616x353.jpg",
+        category: "Shooter",
+        tags: ["FPS", "Multiplayer", "Counter-Strike", "Valve"],
+        year: 2000,
+        developer: "Valve / WebXash3D",
+        description: "Full GoldSrc engine in WebAssembly! Play Counter-Strike 1.6 de_dust2 or Half-Life deathmatch directly in your browser."
+      },
+      {
+        id: "diablo",
+        title: "Diablo I (Web)",
+        url: "https://johnimril.github.io/diablo_web/",
+        image: "https://images.igdb.com/igdb/image/upload/t_720p/co1vce.jpg",
+        category: "Open World",
+        tags: ["Action", "RPG", "Retro", "Blizzard"],
+        year: 1996,
+        developer: "Blizzard North / djavul3",
+        description: "Descend into the dark labyrinth beneath the Tristram cathedral. Loot dungeons, slay demons, and confront the Lord of Terror."
+      },
+
+    ];
+
+    // State
+    let currentCategory = 'all';
+    let currentTag = 'all';
+    let searchQuery = '';
+    let sortMode = 'default';
+    let spotlightIndex = 0;
+    const spotlightGames = [GAMES[0], GAMES[7], GAMES[11], GAMES[4], GAMES[18]]; // BO1, Halo, GTA VC, MW2, Half-Life
+    let spotlightInterval = null;
+
+    function quickPlayRandomGame() {
+      const randomGame = GAMES[Math.floor(Math.random() * GAMES.length)];
+      openGameModal(randomGame);
+    }
+
+    // SVG Placeholder generator for resilient image fallbacks
+    function createFallbackSvg(title) {
+      const escapedTitle = title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="460" height="215" viewBox="0 0 460 215">
+          <defs>
+            <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1b2838"/>
+              <stop offset="100%" stop-color="#0a1017"/>
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#bg)"/>
+          <circle cx="230" cy="90" r="32" fill="#2a475e" opacity="0.6"/>
+          <polygon points="222,78 244,90 222,102" fill="#66c0f4"/>
+          <text x="230" y="150" font-family="sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">${escapedTitle}</text>
+          <text x="230" y="175" font-family="sans-serif" font-size="12" fill="#66c0f4" text-anchor="middle">STEAM WEB ARCADE</text>
+        </svg>
+      `;
+      return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg.trim());
+    }
+
+    // Initialize UI
+    function init() {
+      loadProfile();
+      setupSpotlight();
+      renderGames();
+      setupSearch();
+      setupModalListeners();
+      document.getElementById('totalCountDisplay').textContent = GAMES.length;
+
+      // Check URL for game parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const gameId = urlParams.get('game');
+      const isQuickPlay = urlParams.get('quickplay');
+      
+      if (gameId) {
+        openGameModalById(gameId);
+      } else if (isQuickPlay === 'true') {
+        quickPlayRandomGame();
+      }
+
+      // Adblocker Detection
+      setTimeout(async () => {
+        if (localStorage.getItem('adblockPromptShown')) return;
+        
+        let isBlocked = false;
+        try {
+          // Attempt to fetch a common ad script URL
+          await fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', { method: 'HEAD', mode: 'no-cors' });
+        } catch (e) {
+          isBlocked = true;
+        }
+
+        if (!isBlocked) {
+          // Fallback DOM check for strict CSS blockers
+          const testAd = document.createElement('div');
+          testAd.innerHTML = '&nbsp;';
+          testAd.className = 'adsbox';
+          document.body.appendChild(testAd);
+          if (testAd.offsetHeight === 0) isBlocked = true;
+          testAd.remove();
+        }
+
+        if (isBlocked) {
+          document.getElementById('adblockPrompt').classList.add('active');
+          localStorage.setItem('adblockPromptShown', 'true');
+        }
+      }, 1500);
+    }
+
+    // Spotlight carousel
+    function setupSpotlight() {
+      renderSpotlight(0);
+      const thumbsContainer = document.getElementById('spotlightThumbs');
+      thumbsContainer.innerHTML = '';
+      spotlightGames.forEach((game, idx) => {
+        const thumbBtn = document.createElement('button');
+        thumbBtn.className = `spotlight-thumb-btn ${idx === 0 ? 'active' : ''}`;
+        thumbBtn.title = game.title;
+        thumbBtn.innerHTML = `<img src="${game.image}" alt="${game.title}" onerror="this.src='${createFallbackSvg(game.title)}'">`;
+        thumbBtn.onclick = (e) => {
+          e.stopPropagation();
+          setSpotlightIndex(idx);
+        };
+        thumbsContainer.appendChild(thumbBtn);
+      });
+
+      // Auto cycle every 7 seconds
+      startSpotlightTimer();
+    }
+
+    function startSpotlightTimer() {
+      clearInterval(spotlightInterval);
+      spotlightInterval = setInterval(() => {
+        setSpotlightIndex((spotlightIndex + 1) % spotlightGames.length);
+      }, 7000);
+    }
+
+    function setSpotlightIndex(idx) {
+      spotlightIndex = idx;
+      renderSpotlight(idx);
+      const thumbBtns = document.querySelectorAll('.spotlight-thumb-btn');
+      thumbBtns.forEach((btn, i) => {
+        btn.classList.toggle('active', i === idx);
+      });
+      startSpotlightTimer();
+    }
+
+    function renderSpotlight(idx) {
+      const game = spotlightGames[idx];
+      if (!game) return;
+      const heroImg = document.getElementById('spotlightHeroImg');
+      heroImg.src = game.image;
+      heroImg.onerror = () => { heroImg.src = createFallbackSvg(game.title); };
+
+      document.getElementById('spotlightTitle').textContent = game.title;
+      document.getElementById('spotlightDesc').textContent = game.description;
+      
+      const tagsContainer = document.getElementById('spotlightTags');
+      tagsContainer.innerHTML = game.tags.map(t => `<span class="game-tag">${t}</span>`).join('');
+    }
+
+    function launchSpotlightGame() {
+      const game = spotlightGames[spotlightIndex];
+      if (game) openGameModal(game);
+    }
+
+    // Filtering & Sorting
+    function filterCategory(cat, el) {
+      currentCategory = cat;
+      document.querySelectorAll('.subnav-btn').forEach(btn => btn.classList.remove('active'));
+      if (el) el.classList.add('active');
+      renderGames();
+    }
+
+    function filterByTag(tag, el) {
+      currentTag = tag;
+      document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
+      if (el) el.classList.add('active');
+      renderGames();
+    }
+
+    function setupSearch() {
+      const searchInput = document.getElementById('searchInput');
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim().toLowerCase();
+        renderGames();
+      });
+
+      document.getElementById('brandHomeBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        currentCategory = 'all';
+        currentTag = 'all';
+        searchQuery = '';
+        searchInput.value = '';
+        document.querySelectorAll('.subnav-btn').forEach(b => b.classList.toggle('active', b.dataset.category === 'all'));
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.tag === 'all'));
+        renderGames();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    function handleSortChange(val) {
+      sortMode = val;
+      renderGames();
+    }
+
+    function getFilteredGames() {
+      let filtered = GAMES.filter(g => {
+        // Category check
+        if (currentCategory !== 'all') {
+          if (currentCategory === 'CoD & Zombies') {
+            if (g.category !== 'CoD & Zombies' && !g.tags.includes('Zombies') && !g.tags.includes('Call of Duty')) return false;
+          } else if (g.category !== currentCategory) {
+            return false;
+          }
+        }
+
+        // Tag check
+        if (currentTag !== 'all') {
+          if (!g.tags.includes(currentTag)) return false;
+        }
+
+        // Search check
+        if (searchQuery) {
+          const matchTitle = g.title.toLowerCase().includes(searchQuery);
+          const matchDesc = g.description.toLowerCase().includes(searchQuery);
+          const matchTag = g.tags.some(t => t.toLowerCase().includes(searchQuery));
+          if (!matchTitle && !matchDesc && !matchTag) return false;
+        }
+
+        return true;
+      });
+
+      // Sorting
+      if (sortMode === 'az') {
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (sortMode === 'za') {
+        filtered.sort((a, b) => b.title.localeCompare(a.title));
+      } else if (sortMode === 'year') {
+        filtered.sort((a, b) => b.year - a.year);
+      }
+
+      return filtered;
+    }
+
+    function renderGames() {
+      const grid = document.getElementById('gamesGrid');
+      const filtered = getFilteredGames();
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="no-results">
+            <h3>No games found</h3>
+            <p>Try searching with another keyword or resetting the category filter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(game => {
+        const fallback = createFallbackSvg(game.title);
+        const tagsHtml = game.tags.slice(0, 3).map(t => `<span class="card-tag">${t}</span>`).join('');
+        return `
+          <div class="game-card" onclick="openGameModalById('${game.id}')">
+            <div class="card-img-wrap">
+              <img 
+                class="card-img" 
+                src="${game.image}" 
+                alt="${game.title}" 
+                loading="lazy"
+                onerror="this.onerror=null; this.src='${fallback}'"
+              >
+              <div class="card-play-overlay">
+                <div class="card-play-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="card-content">
+              <div>
+                <div class="card-title" title="${game.title}">${game.title}</div>
+                <div class="card-meta">
+                  <span>${game.year} • ${game.developer.split('/')[0].trim()}</span>
+                  <div class="card-platforms" title="Web Browser & Desktop Compatible">
+                    <svg class="platform-icon" viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.802"/></svg>
+                    <svg class="platform-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                  </div>
+                </div>
+                <div class="card-tags">
+                  ${tagsHtml}
+                </div>
+              </div>
+              <div class="card-footer">
+                <span class="card-free-tag">FREE PLAY</span>
+                <span class="card-action-text">
+                  Play Now
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Profile Management
+    function editProfile() {
+      const currentName = localStorage.getItem('arcade_username') || 'Player1';
+      const currentAvatar = localStorage.getItem('arcade_avatar') || 'P';
+      
+      document.getElementById('profileNameInput').value = currentName;
+      document.getElementById('profileAvatarInput').value = currentAvatar;
+      
+      document.getElementById('profileModal').classList.add('active');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.remove('active');
+    }
+
+    function saveProfileModal() {
+      const newName = document.getElementById('profileNameInput').value.trim();
+      const newAvatar = document.getElementById('profileAvatarInput').value.trim();
+      
+      localStorage.setItem('arcade_username', newName || 'Player1');
+      localStorage.setItem('arcade_avatar', newAvatar || 'P');
+      
+      loadProfile();
+      closeProfileModal();
+    }
+
+    function handleAvatarUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const max_size = 128; // Max width/height for avatar
+          let width = img.width;
+          let height = img.height;
+
+          // Scale maintaining aspect ratio
+          if (width > height) {
+            if (width > max_size) {
+              height *= max_size / width;
+              width = max_size;
+            }
+          } else {
+            if (height > max_size) {
+              width *= max_size / height;
+              height = max_size;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Get compressed data URL and put in input
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          document.getElementById('profileAvatarInput').value = dataUrl;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadProfile() {
+      const name = localStorage.getItem('arcade_username') || 'Player1';
+      const avatar = localStorage.getItem('arcade_avatar') || 'P';
+      
+      const nameElem = document.getElementById('userNameElem');
+      const avatarElem = document.getElementById('userAvatarElem');
+      if (!nameElem || !avatarElem) return;
+
+      nameElem.textContent = name;
+      
+      if (avatar.startsWith('http') || avatar.startsWith('data:')) {
+        avatarElem.innerHTML = `<img src="${avatar}" style="width:100%; height:100%; object-fit:cover; border-radius:4px;">`;
+        avatarElem.style.background = 'transparent';
+      } else {
+        avatarElem.textContent = avatar.charAt(0).toUpperCase();
+        avatarElem.style.background = 'var(--steam-blue)';
+      }
+    }
+
+    function openGameModalById(id) {
+      const game = GAMES.find(g => g.id === id);
+      if (game) {
+        openGameModal(game);
+      }
+    }
+
+    // Modal Player Logic
+    let activeGame = null;
+
+    function openGameModal(game) {
+      activeGame = game;
+      const modal = document.getElementById('playerModal');
+      const iframe = document.getElementById('gameIframe');
+      const loader = document.getElementById('playerLoader');
+      const thumb = document.getElementById('modalGameThumb');
+      const title = document.getElementById('modalGameTitle');
+      const popout = document.getElementById('popoutGameBtn');
+      const external = document.getElementById('modalExternalUrl');
+      const warningBanner = document.getElementById('gameWarningBanner');
+
+      if (game.id === 'gta-vc') {
+        warningBanner.style.display = 'block';
+      } else {
+        warningBanner.style.display = 'none';
+      }
+
+      title.textContent = game.title;
+      thumb.src = game.image;
+      thumb.onerror = () => { thumb.src = createFallbackSvg(game.title); };
+      popout.href = game.url;
+      external.href = game.url;
+      external.textContent = game.url.replace(/^https?:\/\//, '');
+
+      // Update URL to look like a sub-page/sub-domain
+      const newUrl = new URL(window.location);
+      newUrl.searchParams.set('game', game.id);
+      window.history.pushState({ game: game.id }, '', newUrl);
+
+      // Show loader and set iframe src
+      loader.classList.remove('hidden');
+      iframe.src = game.url;
+
+      iframe.onload = () => {
+        loader.classList.add('hidden');
+      };
+
+      // In case iframe load event is blocked by cross-origin, hide loader after timeout
+      setTimeout(() => {
+        loader.classList.add('hidden');
+      }, 2500);
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeGameModal() {
+      const modal = document.getElementById('playerModal');
+      const iframe = document.getElementById('gameIframe');
+      modal.classList.remove('active');
+      // Stop audio & teardown session
+      iframe.src = 'about:blank';
+      document.body.style.overflow = '';
+      activeGame = null;
+
+      // Restore original URL
+      const newUrl = new URL(window.location);
+      newUrl.searchParams.delete('game');
+      window.history.pushState({}, '', newUrl);
+    }
+
+    function toggleGameFullscreen() {
+      const container = document.getElementById('playerContainer');
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (container.requestFullscreen) {
+          container.requestFullscreen();
+        } else if (container.webkitRequestFullscreen) {
+          container.webkitRequestFullscreen();
+        } else if (container.msRequestFullscreen) {
+          container.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    }
+
+    function reloadCurrentGame() {
+      if (!activeGame) return;
+      const iframe = document.getElementById('gameIframe');
+      const loader = document.getElementById('playerLoader');
+      loader.classList.remove('hidden');
+      iframe.src = activeGame.url;
+    }
+
+    function setupModalListeners() {
+      document.getElementById('closeModalBtn').addEventListener('click', closeGameModal);
+      document.getElementById('fullscreenBtn').addEventListener('click', toggleGameFullscreen);
+      document.getElementById('reloadGameBtn').addEventListener('click', reloadCurrentGame);
+
+      // Keyboard shortcuts
+      window.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('playerModal');
+        if (!modal.classList.contains('active')) return;
+
+        if (e.key === 'Escape' && !document.fullscreenElement) {
+          closeGameModal();
+        } else if ((e.key === 'f' || e.key === 'F') && document.activeElement.tagName !== 'INPUT') {
+          toggleGameFullscreen();
+        }
+      });
+
+      // Handle back button
+      window.addEventListener('popstate', (e) => {
+        const newUrl = new URL(window.location);
+        const gameId = newUrl.searchParams.get('game');
+        if (gameId) {
+          openGameModalById(gameId);
+        } else if (activeGame) {
+          closeGameModal();
+        }
+      });
+    }
+
+    // Initialize when DOM is ready
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
